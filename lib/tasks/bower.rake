@@ -1,7 +1,8 @@
 namespace :bower do
   desc "Install bower packages"
   task :install => :environment do
-    sh "npm install bower"
+    #sh "npm install bower"
+    sh "node_modules/bower/bin/bower install"
   end
 
   desc "Update bower packages"
