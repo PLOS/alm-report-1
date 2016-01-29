@@ -9,6 +9,7 @@
     "d3-tip": "git://github.com/Caged/d3-tip"
   },
   "resolutions": {
-    "d3": "3.4.13"
+    "d3": "3.4.13",
+    "lodash": "2.4.1"
   }
 }
