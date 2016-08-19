@@ -94,7 +94,7 @@ html.no-js lang="en"
           VIZ_LIMIT = #{ENV["VIZ_LIMIT"].to_i};
       #{ "var search_total_found = #{@total_found};" if !@total_found.nil? }
 
-  / Google Tag Manager
+  /! Google Tag Manager
   noscript
     iframe src = "//www.googletagmanager.com/ns.html?id=GTM-TP26BH" height = "0" width = "0" style = "display:none;visibility:hidden"
   javascript:
@@ -118,3 +118,4 @@ html.no-js lang="en"
               j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;
               f.parentNode.insertBefore(j, f);
             })(window, document, 'script', 'dataLayer', 'GTM-MQQMGF');
+  /! End Google Tag Manager
