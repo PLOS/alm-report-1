@@ -93,3 +93,29 @@ html.no-js lang="en"
           ARTICLE_LIMIT = #{ENV["ARTICLE_LIMIT"].to_i},
           VIZ_LIMIT = #{ENV["VIZ_LIMIT"].to_i};
       #{ "var search_total_found = #{@total_found};" if !@total_found.nil? }
+
+  /! Google Tag Manager
+  noscript
+    iframe src = "//www.googletagmanager.com/ns.html?id=GTM-TP26BH" height = "0" width = "0" style = "display:none;visibility:hidden"
+  javascript:
+    (function (w, d, s, l, i) {
+              w[l] = w[l] || [];
+              w[l].push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+              var f = d.getElementsByTagName(s)[0],
+                      j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+              j.async = true;
+              j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;
+              f.parentNode.insertBefore(j, f);
+            })(window, document, 'script', 'dataLayer', 'GTM-TP26BH');
+  noscript
+    iframe src = "//www.googletagmanager.com/ns.html?id=GTM-MQQMGF" height = "0" width = "0" style = "display:none;visibility:hidden"
+  javascript:
+    (function (w, d, s, l, i) {
+              w[l] = w[l] || [];
+              w[l].push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+              var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+              j.async = true;
+              j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;
+              f.parentNode.insertBefore(j, f);
+            })(window, document, 'script', 'dataLayer', 'GTM-MQQMGF');
+  /! End Google Tag Manager
