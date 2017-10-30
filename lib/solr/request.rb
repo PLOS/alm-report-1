@@ -56,10 +56,12 @@ module Solr
       end)
 
       facets.add("publication_date" => Hash[
-        counts["facet_dates"]["publication_date"].select do |k, v|
-          k.start_with? "2"
-        end.map{ |date, count| [date, {count: count}] }.reverse
+        *counts["facet_ranges"]["publication_date"]["counts"].map.with_index do |f, i|
+          i % 2 == 1 ? {count: f} : f
+        end
       ])
+
+      facets.facets['publication_date'] = Hash[facets.facets['publication_date'].to_a.reverse]
 
       facets.each do |name, values|
         (@params[:facets] || []).each do |facet|

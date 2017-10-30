@@ -4,8 +4,7 @@ module Solr
   FILTER = "fq=doc_type:full&fq=!article_type_facet:#{URI::encode("\"Issue Image\"")}"
 
   FACETS = "facet=true&facet.field=journal&facet.field=article_type&facet." \
-    "field=publication_date&facet.date=publication_date&facet.date.start" \
-    "=2000-01-01T00:00:00Z&facet.date.end=NOW&facet.date.gap=%2B1YEAR"
+    "field=publication_date&facet.range=publication_date&f.publication_date.facet.range.start=2000-01-01T00:00:00Z&f.publication_date.facet.range.end=NOW&f.publication_date.facet.range.gap=%2B1YEAR"
 
   # The fields we want solr to return for each article by default.
   FL = "id,pmid,publication_date,received_date,accepted_date,title," \
