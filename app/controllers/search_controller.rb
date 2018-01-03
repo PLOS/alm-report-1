@@ -65,7 +65,7 @@ class SearchController < ApplicationController
   def search_params
     params.permit :commit, :everything, :filters, :author, :author_country, :institution,
       :publication_days_ago, :datepicker1, :datepicker2, :subject,
-      :cross_published_journal_name, :financial_disclosure, :filters,
+      :journal_name, :financial_disclosure, :filters,
       :queryFieldId, :startDateAsStringId, :endDateAsStringId,
       :unformattedQueryId, :journalOpt, :utf8, facets: [:name, :value]
 

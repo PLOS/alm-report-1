@@ -1,6 +1,6 @@
 class SearchResult
   attr_accessor :checked
-  attr_reader :article_type, :cross_published_journal_name,
+  attr_reader :article_type, :journal_name,
               :data, :financial_disclosure, :id, :pmid, :publication_date,
               :subjects, :title, :type, :publisher, :journal, :editors,
               :received_date, :accepted_date
@@ -45,7 +45,7 @@ class SearchResult
     @article_type = @data["article_type"]
     @authors = @data["author_display"]
     @editors = @data["editor_display"]
-    @journal = @data["cross_published_journal_name"].try(:flatten).try(:at, 0)
+    @journal = @data["journal_name"].try(:flatten).try(:at, 0)
     @financial_disclosure = @data["financial_disclosure"]
     @pmid = @data["pmid"]
     @publication_date = @data["publication_date"]

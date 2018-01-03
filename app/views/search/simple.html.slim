@@ -34,7 +34,7 @@
           = label_tag(:subject, "Subject Area")
           = text_field_tag(:subject, nil, :class => "subject-autocomplete")
         .input-holder
-          = label_tag(:cross_published_journal_name, "Journal")
+          = label_tag(:journal_name, "Journal")
           = collection_select( \
               "filters", "", @journals, :first, :last, class: "styled", \
               include_blank: "All Journals" \

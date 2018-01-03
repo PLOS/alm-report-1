@@ -129,7 +129,7 @@ module Solr
               "#{filter[:name]}:\"#{filter[:value]}\""
             end
           elsif filter.present?
-            "cross_published_journal_key:#{filter}"
+            "journal_key:#{filter}"
           end
         end.compact.join(" AND ")
         @query[:fq] = fq unless fq.blank?
