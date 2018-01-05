@@ -69,11 +69,11 @@ describe Solr::QueryBuilder do
   end
 
   it "removes All Journals from list of journals" do
-    # cross_published_journal_name should be ignored if it equals "All Journals"
+    # journal_name should be ignored if it equals "All Journals"
     build_query_test_once(
       { everything: "fooCross", filters: ["PLoSONE"] },
       'everything:fooCross',
-      {fq: "cross_published_journal_key:PLoSONE"}
+      {fq: "journal_key:PLoSONE"}
     )
 
     build_query_test_once(

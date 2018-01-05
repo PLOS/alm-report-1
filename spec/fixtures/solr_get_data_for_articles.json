@@ -9,7 +9,7 @@
     "docs": [
       {
         "id": "10.1371\/journal.pmed.0020124",
-        "cross_published_journal_name": [
+        "journal_name": [
           "PLOS Medicine"
         ],
         "pmid": "16060722",
@@ -34,7 +34,7 @@
       },
       {
         "id": "10.1371\/journal.pone.0064652",
-        "cross_published_journal_name": [
+        "journal_name": [
           "PLOS ONE"
         ],
         "pmid": "23717645",

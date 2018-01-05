@@ -56,7 +56,7 @@ describe Solr::Request do
     url = "http://api.plos.org/search?q=#{URI::encode(q)}&fq=doc_type:full" \
         "&fq=!article_type_facet:%22Issue%20Image%22" \
         "&fl=id,pmid,publication_date,received_date,accepted_date,title," \
-        "cross_published_journal_name,author_display,editor_display,article_type,affiliate," \
+        "journal_name,author_display,editor_display,article_type,affiliate," \
         "subject,financial_disclosure&wt=json&facet=false&rows=#{dois.size}"
     body = File.read("#{fixture_path}solr_get_data_for_articles.json")
     stub_request(:get, url).to_return(:body => body, :status => 200)
@@ -66,7 +66,7 @@ describe Solr::Request do
     data.size.should eq(2)
 
     data["10.1371/journal.pmed.0020124"]["id"].should eq("10.1371/journal.pmed.0020124")
-    data["10.1371/journal.pmed.0020124"]["cross_published_journal_name"].should eq(["PLOS Medicine"])
+    data["10.1371/journal.pmed.0020124"]["journal_name"].should eq(["PLOS Medicine"])
     data["10.1371/journal.pmed.0020124"]["pmid"].should eq("16060722")
     data["10.1371/journal.pmed.0020124"]["subject"].should eq([
       "/Science policy/Research facilities/Research laboratories",
@@ -89,7 +89,7 @@ describe Solr::Request do
 
   it "gets journal name and journal key information" do
 
-    url = "http://api.plos.org/search?facet=true&facet.field=cross_published_journal_key&facet.mincount=1&fq=doc_type:full&fq=!article_type_facet:%22Issue%20Image%22&q=*:*&rows=0&wt=json"
+    url = "http://api.plos.org/search?facet=true&facet.field=journal_key&facet.mincount=1&fq=doc_type:full&fq=!article_type_facet:%22Issue%20Image%22&q=*:*&rows=0&wt=json"
     body = File.read("#{fixture_path}solr_journal_keys.json")
     stub_request(:get, url).to_return(:body => body, :status => 200)
 
@@ -133,7 +133,7 @@ describe Solr::Request do
     #     "author:Garmay%20AND%20everything:word%20AND%20subject:%22Gene%20regulation%22&" \
     #     "fq=doc_type:full&fq=!article_type_facet:%22Issue%20Image%22&" \
     #     "fl=id,pmid,publication_date,received_date,accepted_date,title," \
-    #     "cross_published_journal_name,author_display,editor_display,article_type,affiliate," \
+    #     "journal_name,author_display,editor_display,article_type,affiliate," \
     #     "subject,financial_disclosure&wt=json&facet=false&rows=25&hl=false"
 
     # body = File.read("#{fixture_path}simple_search_result.json")
@@ -156,7 +156,7 @@ describe Solr::Request do
 
     results[0].data.should eq({
       "id"=>"10.1371/journal.pone.0006901",
-      "cross_published_journal_name"=>["PLOS ONE"],
+      "journal_name"=>["PLOS ONE"],
       "pmid"=>"19730735",
       "subject"=>["/Research and analysis methods/Molecular biology techniques/Sequencing techniques/Sequence analysis",
         "/Biology and life sciences/Genetics/Genomics/Genome evolution",
