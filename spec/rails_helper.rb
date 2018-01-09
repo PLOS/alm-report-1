@@ -107,4 +107,6 @@ RSpec.configure do |config|
   config.before(:each) do |example|
     Rails.cache.clear
   end
+
+  config.filter_run_excluding :skip => true
 end
