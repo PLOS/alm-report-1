@@ -9,9 +9,7 @@
     "docs": [
       {
         "id": "10.1371\/journal.pmed.0020124",
-        "journal_name": [
-          "PLOS Medicine"
-        ],
+        "journal_name": "PLOS Medicine",
         "pmid": "16060722",
         "subject": [
           "\/Science policy\/Research facilities\/Research laboratories",
@@ -34,9 +32,7 @@
       },
       {
         "id": "10.1371\/journal.pone.0064652",
-        "journal_name": [
-          "PLOS ONE"
-        ],
+        "journal_name": "PLOS ONE",
         "pmid": "23717645",
         "subject": [
           "\/Medicine and health sciences\/Epidemiology\/HIV epidemiology",

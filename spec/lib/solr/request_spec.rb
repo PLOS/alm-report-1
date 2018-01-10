@@ -66,7 +66,7 @@ describe Solr::Request do
     data.size.should eq(2)
 
     data["10.1371/journal.pmed.0020124"]["id"].should eq("10.1371/journal.pmed.0020124")
-    data["10.1371/journal.pmed.0020124"]["journal_name"].should eq(["PLOS Medicine"])
+    data["10.1371/journal.pmed.0020124"]["journal_name"].should eq("PLOS Medicine")
     data["10.1371/journal.pmed.0020124"]["pmid"].should eq("16060722")
     data["10.1371/journal.pmed.0020124"]["subject"].should eq([
       "/Science policy/Research facilities/Research laboratories",
@@ -123,8 +123,12 @@ describe Solr::Request do
 
     q = Solr::Request.new(params)
     metadata = q.query[:metadata]
+
     metadata[:publication_date][0].should eq(Date.strptime("05-07-2014", "%m-%d-%Y"))
     metadata[:publication_date][1].should eq(DateTime.strptime("10-31-2014 23:59:59", "%m-%d-%Y %H:%M:%S"))
+
+    results = q.query[:docs]
+    results[0].journal_name.should eq("PLOS ONE")
   end
 
   it "query for articles using simple search", vcr: true do

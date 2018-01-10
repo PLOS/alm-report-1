@@ -1,9 +1,10 @@
 class SearchResult
   attr_accessor :checked
-  attr_reader :article_type, :journal_name,
+  attr_reader :article_type,
               :data, :financial_disclosure, :id, :pmid, :publication_date,
               :subjects, :title, :type, :publisher, :journal, :editors,
               :received_date, :accepted_date
+  alias_method :journal_name, :journal
 
   def self.from_crossref(id)
     response = SearchCrossref.get "/works/#{id}"
@@ -45,7 +46,7 @@ class SearchResult
     @article_type = @data["article_type"]
     @authors = @data["author_display"]
     @editors = @data["editor_display"]
-    @journal = @data["journal_name"].try(:flatten).try(:at, 0)
+    @journal = @data["journal_name"]
     @financial_disclosure = @data["financial_disclosure"]
     @pmid = @data["pmid"]
     @publication_date = @data["publication_date"]
@@ -79,6 +80,7 @@ class SearchResult
   def affiliations
     if @affiliations
       affiliations = @affiliations.map do |a|
+
         fields = Geocode.parse_location_from_affiliation(a)
         if fields
           {

@@ -19,6 +19,7 @@ module Solr
 
     def self.send_query(url)
       start_time = Time.now
+
       resp = Net::HTTP.get_response(URI.parse(url))
 
       end_time = Time.now
@@ -103,16 +104,6 @@ module Solr
       Request.fix_date(doc, "publication_date")
       Request.fix_date(doc, "received_date")
       Request.fix_date(doc, "accepted_date")
-
-      # For articles cross-published in PLOS Collections, we want to display the
-      # original journal name throughout the app.
-      if doc["journal_name"] && doc["journal_name"].length > 1
-        collections_index = doc["journal_name"].index("PLOS Collections")
-        if !collections_index.nil?
-          new_index = collections_index == 0 ? 1 : 0
-          doc["journal_name"][0] = doc["journal_name"][new_index]
-        end
-      end
       doc
     end
 
