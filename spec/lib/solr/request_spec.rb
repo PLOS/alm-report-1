@@ -88,26 +88,17 @@ describe Solr::Request do
   end
 
   it "gets journal name and journal key information" do
-
     url = "#{ENV['SOLR_URL']}?facet=true&facet.field=journal_key&facet.mincount=1&fq=doc_type:full&fq=!article_type_facet:%22Issue%20Image%22&q=*:*&rows=0&wt=json"
     body = File.read("#{fixture_path}solr_journal_keys.json")
     stub_request(:get, url).to_return(:body => body, :status => 200)
 
+    result = Solr::Request.send_query(url)
+    solr_journal_keys = result['facet_counts']['facet_fields']['journal_key'].to_set
+
     data = Solr::Request.get_journals
+    expected_journal_keys = data.keys.to_set.delete("PLoSCollections")
 
-    data.size.should eq(8)
-
-    journals = {
-      "PLoSBiology" => "PLOS Biology",
-      "PLoSCollections" => "PLOS Collections",
-      "PLoSCompBiol" => "PLOS Computational Biology",
-      "PLoSGenetics" => "PLOS Genetics",
-      "PLoSMedicine" => "PLOS Medicine",
-      "PLoSNTD" => "PLOS Neglected Tropical Diseases",
-      "PLoSONE" => "PLOS ONE",
-      "PLoSPathogens" => "PLOS Pathogens"
-    }
-    data.should eq(journals)
+    expect( expected_journal_keys.subset?(solr_journal_keys) ).to be true
   end
 
   it "returns processed publication_date" do

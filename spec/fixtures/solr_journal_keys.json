@@ -1,50 +1,34 @@
 {
-  "responseHeader": {
-    "status": 0,
-    "QTime": 24
-  },
   "response": {
-    "numFound": 726196,
+    "numFound": 226974,
     "start": 0,
     "maxScore": 1,
-    "docs": [
-      
-    ]
+    "docs": []
   },
   "facet_counts": {
-    "facet_queries": {
-      
-    },
+    "facet_queries": {},
     "facet_fields": {
       "journal_key": [
         "PLoSONE",
-        587371,
+        193329,
         "PLoSGenetics",
-        30845,
+        7206,
         "PLoSPathogens",
-        27350,
-        "PLoSCompBiol",
-        23508,
-        "PLoSBiology",
-        23244,
+        6654,
         "PLoSNTD",
-        17080,
+        5977,
+        "PLoSCompBiol",
+        5630,
+        "PLoSBiology",
+        4635,
         "PLoSMedicine",
-        16798,
-        "PLoSCollections",
-        10640,
+        3537,
         "PLoSClinicalTrials",
-        521
+        6
       ]
     },
-    "facet_dates": {
-      
-    },
-    "facet_ranges": {
-      
-    }
-  },
-  "highlighting": {
-    
+    "facet_ranges": {},
+    "facet_intervals": {},
+    "facet_heatmaps": {}
   }
 }
