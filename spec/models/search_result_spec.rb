@@ -56,7 +56,6 @@ describe SearchResult, vcr: true do
 
   it "handles results without affiliations" do
     result = Search.find_by_ids(["10.1371/journal.pbio.1001046"])[0]
-byebug
     expect(result.affiliations).to eq nil
   end
 end
