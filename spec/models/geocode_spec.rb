@@ -47,6 +47,7 @@ describe Geocode do
 
   it "returns the same number of geocodes as there are addresses" do
     addresses1 = ["Slovenia"]
+
     results1 = Geocode.load_from_addresses(addresses1)
     expect(results1.length).to eq addresses1.length
     addresses2 = [

@@ -19,6 +19,7 @@ module Solr
 
     def self.send_query(url)
       start_time = Time.now
+
       resp = Net::HTTP.get_response(URI.parse(url))
 
       end_time = Time.now
@@ -89,9 +90,9 @@ module Solr
     end
 
     # The goal is to mimic advanced search filter on the PLOS (journal) side
-    # 1. use fq (filter query) with cross_published_journal_key field
+    # 1. use fq (filter query) with journal_key field
     # 2. display the journal names that are tied to the
-    #    cross_published_journal_key field on the front end
+    #    journal_key field on the front end
     def self.get_journals
       SearchPlos::JOURNALS
     end
@@ -103,16 +104,6 @@ module Solr
       Request.fix_date(doc, "publication_date")
       Request.fix_date(doc, "received_date")
       Request.fix_date(doc, "accepted_date")
-
-      # For articles cross-published in PLOS Collections, we want to display the
-      # original journal name throughout the app.
-      if doc["cross_published_journal_name"] && doc["cross_published_journal_name"].length > 1
-        collections_index = doc["cross_published_journal_name"].index("PLOS Collections")
-        if !collections_index.nil?
-          new_index = collections_index == 0 ? 1 : 0
-          doc["cross_published_journal_name"][0] = doc["cross_published_journal_name"][new_index]
-        end
-      end
       doc
     end
 

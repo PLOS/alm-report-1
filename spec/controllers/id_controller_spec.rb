@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe IdController do
+describe IdController, skip: true do
   it "validates dois" do
     IdController.validate_doi(nil).should eq(nil)
     IdController.validate_doi("").should eq(nil)

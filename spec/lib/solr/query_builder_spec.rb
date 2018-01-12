@@ -69,11 +69,11 @@ describe Solr::QueryBuilder do
   end
 
   it "removes All Journals from list of journals" do
-    # cross_published_journal_name should be ignored if it equals "All Journals"
+    # journal_name should be ignored if it equals "All Journals"
     build_query_test_once(
       { everything: "fooCross", filters: ["PLoSONE"] },
       'everything:fooCross',
-      {fq: "cross_published_journal_key:PLoSONE"}
+      {fq: "journal_key:PLoSONE"}
     )
 
     build_query_test_once(
@@ -115,14 +115,15 @@ describe Solr::QueryBuilder do
   it "generates the correct URL for a query" do
     qb = Solr::QueryBuilder.new(everything: "everyTitle", title: "titleFoo")
     qb.build
-    url = "http://api.plos.org/search?q=everything%3AeveryTitle+AND+title%3A" \
+    url = "#{ENV['SOLR_URL']}?q=everything%3AeveryTitle+AND+title%3A" \
       "titleFoo&fq=doc_type:full&fq=!article_type_facet:%22Issue%20Image%22&" \
-      "fl=id,pmid,publication_date,received_date,accepted_date,title,cross_" \
-      "published_journal_name,author_display,editor_display,article_type,affi" \
-      "liate,subject,financial_disclosure&wt=json&rows=25&hl=false&" \
-      "facet=true&facet.field=journal&facet.field=article_type&facet.field=" \
-      "publication_date&facet.date=publication_date&facet.date.start=" \
-      "2000-01-01T00:00:00Z&facet.date.end=NOW&facet.date.gap=%2B1YEAR"
+      "fl=id,pmid,publication_date,received_date,accepted_date,title,journal_name," \
+      "author_display,editor_display,article_type,affiliate,subject,financial_disclosure&" \
+      "wt=json&rows=25&hl=false&facet=true&facet.field=journal&facet.field=article_type&" \
+      "facet.field=publication_date&facet.range=publication_date&" \
+      "f.publication_date.facet.range.start=2000-01-01T00:00:00Z&" \
+      "f.publication_date.facet.range.end=NOW&f.publication_date.facet.range.gap=%2B1YEAR"
+
     qb.url.should eq(url)
   end
 

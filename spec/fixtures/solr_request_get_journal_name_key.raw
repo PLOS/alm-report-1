@@ -8,4 +8,4 @@ Connection: close
 Transfer-Encoding: chunked
 Set-Cookie: Coyote-2-9514450c=95144522:0; path=/
 
-{"response":{"numFound":1089491,"start":0,"maxScore":1.0,"docs":[]},"facet_counts":{"facet_queries":{},"facet_fields":{"cross_published_journal_key":["PLoSONE",916833,"PLoSGenetics",39796,"PLoSPathogens",34986,"PLoSCompBiol",29498,"PLoSBiology",25917,"PLoSNTD",23975,"PLoSMedicine",18486,"PLoSCollections",17571,"PLoSClinicalTrials",521]},"facet_dates":{},"facet_ranges":{}}}
+{"response":{"numFound":1089491,"start":0,"maxScore":1.0,"docs":[]},"facet_counts":{"facet_queries":{},"facet_fields":{"journal_key":["PLoSONE",916833,"PLoSGenetics",39796,"PLoSPathogens",34986,"PLoSCompBiol",29498,"PLoSBiology",25917,"PLoSNTD",23975,"PLoSMedicine",18486,"PLoSCollections",17571,"PLoSClinicalTrials",521]},"facet_dates":{},"facet_ranges":{}}}

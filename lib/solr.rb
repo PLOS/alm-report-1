@@ -8,7 +8,7 @@ module Solr
 
   # The fields we want solr to return for each article by default.
   FL = "id,pmid,publication_date,received_date,accepted_date,title," \
-      "cross_published_journal_name,author_display,editor_display,article_type,affiliate,subject," \
+      "journal_name,author_display,editor_display,article_type,affiliate,subject," \
       "financial_disclosure"
 
   FL_METRIC_DATA = "id,alm_scopusCiteCount,alm_mendeleyCount,counter_total_all," \
@@ -32,7 +32,7 @@ module Solr
 
   QUERY_PARAMS = [
     :everything, :author, :affiliate, :subject,
-    :cross_published_journal_name, :financial_disclosure, :title,
+    :journal_name, :financial_disclosure, :title,
     :publication_date, :id
   ]
 

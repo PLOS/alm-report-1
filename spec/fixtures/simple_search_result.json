@@ -9,9 +9,7 @@
     "docs": [
       {
         "id": "10.1371\/journal.pone.0006901",
-        "cross_published_journal_name": [
-          "PLOS ONE"
-        ],
+        "journal_name": "PLOS ONE",
         "pmid": "19730735",
         "subject": [
           "\/Research and analysis methods\/Molecular biology techniques\/Sequencing techniques\/Sequence analysis",

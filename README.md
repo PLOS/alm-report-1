@@ -40,6 +40,28 @@ When you're ready to deploy `ALM Reports`, take a look at the [in-depth deployme
 
 In case you would like to setup the dependencies manually (for example for non-Vagrant local development, or for servers not provisioned with Chef), check out the [manual installation guide](https://github.com/articlemetrics/alm-report/blob/master/docs/manual_installation.md).
 
+## Testing
+
+There is a little bit of setup required to run the rspec tests. To run them,
+first create a .env file in the root of the checkout. Make sure that it meets
+the conditions specified below. There is a sample testing .env file in root of
+the repo (testing.dotenv).
+
+1. The SOLR_URL must point to the url below; this url is used in VCR requests. 
+
+    SOLR_URL=http://solr-mega-dev.soma.plos.org/solr/journals_dev/select
+
+2. Some of the tests query the ALM Reports instance specified in the .env to
+   lookup geocode data. Some of the tests will fail if geocode table hasn't
+   been populated (ex: geocode_spec, search_result_spec, ...)
+
+Assuming the above conditions are met, running the tests is pretty
+straightforward. Note that these were run using Ruby 2.2.2
+
+    $ bundle exec rspec spec
+
+    82 examples, 0 failures
+
 ## License
 
 ALM Reports is released under the [MIT License](http://www.opensource.org/licenses/MIT).

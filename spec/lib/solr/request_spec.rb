@@ -7,7 +7,7 @@ describe Solr::Request do
 
     q = pmids.map {|pmid| "pmid:\"#{pmid}\""}.join(" OR ")
 
-    url = "http://api.plos.org/search?q=#{URI::encode(q)}&fq=doc_type:full&fq=!article_type_facet:#{URI::encode("\"Issue Image\"")}&fl=id,publication_date,pmid&wt=json&facet=false&rows=#{pmids.size}"
+    url = "#{ENV['SOLR_URL']}?q=#{URI::encode(q)}&fq=doc_type:full&fq=!article_type_facet:#{URI::encode("\"Issue Image\"")}&fl=id,publication_date,pmid&wt=json&facet=false&rows=#{pmids.size}"
 
     body = File.read("#{fixture_path}solr_pmid_validation.json")
     stub_request(:get, "#{url}").to_return(:body => body, :status => 200)
@@ -32,7 +32,7 @@ describe Solr::Request do
     ]
 
     q = dois.map { | doi | "id:\"#{doi}\"" }.join(" OR ")
-    url = "http://api.plos.org/search?q=#{URI::encode(q)}&fq=doc_type:full&fq=!article_type_facet:%22Issue%20Image%22&fl=id&wt=json&facet=false&rows=#{dois.size}"
+    url = "#{ENV['SOLR_URL']}?q=#{URI::encode(q)}&fq=doc_type:full&fq=!article_type_facet:%22Issue%20Image%22&fl=id&wt=json&facet=false&rows=#{dois.size}"
     body = File.read("#{fixture_path}solr_validate_dois.json")
     stub_request(:get, url).to_return(:body => body, :status => 200)
 
@@ -53,10 +53,10 @@ describe Solr::Request do
     ]
 
     q = dois.map { |doi| "id:\"#{doi}\"" }.join(" OR ")
-    url = "http://api.plos.org/search?q=#{URI::encode(q)}&fq=doc_type:full" \
+    url = "#{ENV['SOLR_URL']}?q=#{URI::encode(q)}&fq=doc_type:full" \
         "&fq=!article_type_facet:%22Issue%20Image%22" \
         "&fl=id,pmid,publication_date,received_date,accepted_date,title," \
-        "cross_published_journal_name,author_display,editor_display,article_type,affiliate," \
+        "journal_name,author_display,editor_display,article_type,affiliate," \
         "subject,financial_disclosure&wt=json&facet=false&rows=#{dois.size}"
     body = File.read("#{fixture_path}solr_get_data_for_articles.json")
     stub_request(:get, url).to_return(:body => body, :status => 200)
@@ -66,7 +66,7 @@ describe Solr::Request do
     data.size.should eq(2)
 
     data["10.1371/journal.pmed.0020124"]["id"].should eq("10.1371/journal.pmed.0020124")
-    data["10.1371/journal.pmed.0020124"]["cross_published_journal_name"].should eq(["PLOS Medicine"])
+    data["10.1371/journal.pmed.0020124"]["journal_name"].should eq("PLOS Medicine")
     data["10.1371/journal.pmed.0020124"]["pmid"].should eq("16060722")
     data["10.1371/journal.pmed.0020124"]["subject"].should eq([
       "/Science policy/Research facilities/Research laboratories",
@@ -88,31 +88,22 @@ describe Solr::Request do
   end
 
   it "gets journal name and journal key information" do
-
-    url = "http://api.plos.org/search?facet=true&facet.field=cross_published_journal_key&facet.mincount=1&fq=doc_type:full&fq=!article_type_facet:%22Issue%20Image%22&q=*:*&rows=0&wt=json"
+    url = "#{ENV['SOLR_URL']}?facet=true&facet.field=journal_key&facet.mincount=1&fq=doc_type:full&fq=!article_type_facet:%22Issue%20Image%22&q=*:*&rows=0&wt=json"
     body = File.read("#{fixture_path}solr_journal_keys.json")
     stub_request(:get, url).to_return(:body => body, :status => 200)
 
+    result = Solr::Request.send_query(url)
+    solr_journal_keys = result['facet_counts']['facet_fields']['journal_key'].to_set
+
     data = Solr::Request.get_journals
+    expected_journal_keys = data.keys.to_set.delete("PLoSCollections")
 
-    data.size.should eq(8)
-
-    journals = {
-      "PLoSBiology" => "PLOS Biology",
-      "PLoSCollections" => "PLOS Collections",
-      "PLoSCompBiol" => "PLOS Computational Biology",
-      "PLoSGenetics" => "PLOS Genetics",
-      "PLoSMedicine" => "PLOS Medicine",
-      "PLoSNTD" => "PLOS Neglected Tropical Diseases",
-      "PLoSONE" => "PLOS ONE",
-      "PLoSPathogens" => "PLOS Pathogens"
-    }
-    data.should eq(journals)
+    expect( expected_journal_keys.subset?(solr_journal_keys) ).to be true
   end
 
   it "returns processed publication_date" do
     body = File.read("#{fixture_path}simple_search_result.json")
-    stub_request(:get, /api.plos.org/).to_return(body: body)
+    stub_request(:get, /#{ENV['SOLR_URL']}/).to_return(body: body)
 
     params = {
       :everything =>"word",
@@ -123,8 +114,12 @@ describe Solr::Request do
 
     q = Solr::Request.new(params)
     metadata = q.query[:metadata]
+
     metadata[:publication_date][0].should eq(Date.strptime("05-07-2014", "%m-%d-%Y"))
     metadata[:publication_date][1].should eq(DateTime.strptime("10-31-2014 23:59:59", "%m-%d-%Y %H:%M:%S"))
+
+    results = q.query[:docs]
+    results[0].journal_name.should eq("PLOS ONE")
   end
 
   it "query for articles using simple search", vcr: true do
@@ -133,7 +128,7 @@ describe Solr::Request do
     #     "author:Garmay%20AND%20everything:word%20AND%20subject:%22Gene%20regulation%22&" \
     #     "fq=doc_type:full&fq=!article_type_facet:%22Issue%20Image%22&" \
     #     "fl=id,pmid,publication_date,received_date,accepted_date,title," \
-    #     "cross_published_journal_name,author_display,editor_display,article_type,affiliate," \
+    #     "journal_name,author_display,editor_display,article_type,affiliate," \
     #     "subject,financial_disclosure&wt=json&facet=false&rows=25&hl=false"
 
     # body = File.read("#{fixture_path}simple_search_result.json")
@@ -156,25 +151,24 @@ describe Solr::Request do
 
     results[0].data.should eq({
       "id"=>"10.1371/journal.pone.0006901",
-      "cross_published_journal_name"=>["PLOS ONE"],
+      "journal_name"=>"PLOS ONE",
       "pmid"=>"19730735",
-      "subject"=>["/Research and analysis methods/Molecular biology techniques/Sequencing techniques/Sequence analysis",
-        "/Biology and life sciences/Genetics/Genomics/Genome evolution",
-        "/Biology and life sciences/Genetics/Genomics/Genome analysis/Genomic databases",
-        "/Research and analysis methods/Molecular biology techniques/Sequencing techniques/Sequence analysis/Sequence alignment",
-        "/Biology and life sciences/Evolutionary biology/Molecular evolution/Genome evolution",
-        "/Biology and life sciences/Molecular biology/Molecular biology techniques/Sequencing techniques/Sequence analysis/Sequence alignment",
-        "/Biology and life sciences/Molecular biology/Molecular biology techniques/Sequencing techniques/Sequence analysis",
+
+      "subject"=>["/Biology and life sciences/Genetics/Genomics/Animal genomics/Invertebrate genomics",
         "/Biology and life sciences/Biochemistry/Proteins/DNA-binding proteins/Transcription factors",
-        "/Research and analysis methods/Database and informatics methods/Biological databases/Genomic databases",
-        "/Research and analysis methods/Database and informatics methods/Database searching/Sequence similarity searching",
-        "/Biology and life sciences/Genetics/Genomics/Animal genomics/Invertebrate genomics",
         "/Biology and life sciences/Genetics/Gene expression/Gene regulation/Transcription factors",
-        "/Biology and life sciences/Computational biology/Genome analysis/Genomic databases",
         "/Biology and life sciences/Biochemistry/Proteins/Regulatory proteins/Transcription factors",
-        "/Research and analysis methods/Molecular biology techniques/Sequencing techniques/Sequence analysis/Sequence motif analysis",
-        "/Biology and life sciences/Molecular biology/Molecular biology techniques/Sequencing techniques/Sequence analysis/Sequence motif analysis",
-        "/Biology and life sciences/Computational biology/Genome evolution"],
+        "/Research and analysis methods/Database and informatics methods/Database searching/Sequence similarity searching",
+        "/Research and analysis methods/Database and informatics methods/Biological databases/Sequence databases",
+        "/Research and analysis methods/Experimental organism systems/Model organisms/Drosophila melanogaster",
+        "/Research and analysis methods/Model organisms/Drosophila melanogaster",
+        "/Research and analysis methods/Experimental organism systems/Animal models/Drosophila melanogaster",
+        "/Research and analysis methods/Database and informatics methods/Bioinformatics/Sequence analysis",
+        "/Research and analysis methods/Database and informatics methods/Bioinformatics/Sequence analysis/Sequence alignment",
+        "/Research and analysis methods/Database and informatics methods/Bioinformatics/Sequence analysis/Sequence motif analysis",
+        "/Research and analysis methods/Database and informatics methods/Bioinformatics/Sequence analysis/Sequence databases",
+        "/Biology and life sciences/Organisms/Eukaryota/Animals/Invertebrates/Arthropoda/Insects/Drosophila/Drosophila melanogaster"],
+
       "accepted_date" => Date.parse("Fri, 07 Aug 2009"),
       "received_date" => Date.parse("Wed, 08 Oct 2008"),
       "publication_date" => Date.parse("Fri, 04 Sep 2009"),
@@ -192,15 +186,8 @@ describe Solr::Request do
   end
 
   it "can use a custom field list (fl)" do
-    url = "http://api.plos.org/search?" \
-        "facet=true&facet.field=journal&facet.field=article_type&facet.field=" \
-        "publication_date&facet.date=publication_date&facet.date.start=" \
-        "2000-01-01T00:00:00Z&facet.date.end=NOW&facet.date.gap=%2B1YEAR" \
-        "&fl=id,pmid,publication_date" \
-        "&fq=doc_type:full&fq=!article_type_facet:%22Issue%20" \
-        "Image%22&hl=false&q=everything:biology&rows=25&wt=json&"
 
-    url = "http://api.plos.org/search?facet=true&facet.date=publication_date&facet.date.end=NOW&facet.date.gap=%2B1YEAR&facet.date.start=2000-01-01T00:00:00Z&facet.field=article_type&facet.field=journal&facet.field=publication_date&fl=id,pmid,publication_date&fq=!article_type_facet:%22Issue%20Image%22&fq=doc_type:full&hl=false&q=everything:biology&rows=25&wt=json"
+    url = "#{ENV['SOLR_URL']}?f.publication_date.facet.range.end=NOW&f.publication_date.facet.range.gap=%2B1YEAR&f.publication_date.facet.range.start=2000-01-01T00:00:00Z&facet=true&facet.field=article_type&facet.field=journal&facet.field=publication_date&facet.range=publication_date&fl=id,pmid,publication_date&fq=!article_type_facet:%22Issue%20Image%22&fq=doc_type:full&hl=false&q=everything:biology&rows=25&wt=json"
     fl = "id,pmid,publication_date"
 
     fixture = File.open("#{fixture_path}solr_custom_field_list.raw")

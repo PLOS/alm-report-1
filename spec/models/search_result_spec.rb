@@ -51,7 +51,6 @@ describe SearchResult, vcr: true do
 
   it "gets the journal title with most information", vcr: true do
     result = Search.find_by_ids(["10.1371/journal.pcbi.1002727"])[0]
-
     expect(result.journal.downcase).to eq("plos computational biology")
   end
 

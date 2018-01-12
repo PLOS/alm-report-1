@@ -12,7 +12,7 @@ describe ReportsController do
   describe "GET download_data" do
     if Search.plos?
       it "generates the correct CSV" do
-        stub_request(:get, /api.plos.org\/search/).
+        stub_request(:get, /#{ENV['SOLR_URL']}/).
           to_return(File.open('spec/fixtures/api_plos_biology_search.raw'))
 
         stub_request(:get, %r{/api/v3/articles.*(&info=history)?}).
