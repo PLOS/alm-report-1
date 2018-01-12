@@ -47,7 +47,7 @@ first create a .env file in the root of the checkout. Make sure that it meets
 the conditions specified below. There is a sample testing .env file in root of
 the repo (testing.dotenv).
 
-1. The SOLR_URL must point to the url below; this is what was used in the VCR requests. 
+1. The SOLR_URL must point to the url below; this url is used in the VCR requests. 
 
     SOLR_URL=http://solr-mega-dev.soma.plos.org/solr/journals_dev/select
 
