@@ -52,6 +52,7 @@ VCR.configure do |c|
   c.filter_sensitive_data("<API_KEY>") { ENV["ALM_API_KEY"] }
   c.configure_rspec_metadata!
   c.default_cassette_options = {
+    :allow_playback_repeats => true,
     :match_requests_on => [:method,
     VCR.request_matchers.uri_without_param(:filter)]
   }

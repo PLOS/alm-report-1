@@ -12,8 +12,8 @@ development:
   <<: *defaults
 
 test:
-  database: <%= ENV["DB_NAME"] %>_test
-  <<: *defaults
+  adapter: sqlite3
+  database: almreports_test
 
 production:
   <<: *defaults

@@ -47,6 +47,7 @@ group :test do
   gem "webmock"
   gem "codeclimate-test-reporter", require: false
   gem "vcr"
+  gem "sqlite3", "~> 1.3.13"
 end
 
 group :test, :development do
